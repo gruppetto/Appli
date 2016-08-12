@@ -284,7 +284,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         t.start();
     }
 
-    public void showToast(final String toast)
+public void getToken(){
+
+    };
+
+    private void showToast(final String toast)
     {
         runOnUiThread(new Runnable() {
             public void run()
