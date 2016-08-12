@@ -49,14 +49,20 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -80,6 +86,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.facebook.AccessToken;
@@ -92,6 +99,13 @@ import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -128,6 +142,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private String idFB;
     private String nameFB;
     private String dateFB;
+    private String text;
 
     private LoginButton loginButtonFacebook;
     private CallbackManager callbackManager;
@@ -147,6 +162,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // classic login
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         //populateAutoComplete();
+
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -174,23 +190,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         //new CallAPI().execute("http://gruppettoapi.herokuapp.com/login");
         // facebook login
-        POST("yolo");
+        //POST("yolo");
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        loginButtonFacebook = (LoginButton)findViewById(R.id.login_button_facebook);
+        loginButtonFacebook = (LoginButton) findViewById(R.id.login_button_facebook);
         loginButtonFacebook.setReadPermissions(Arrays.asList(
                 "public_profile", "email", "user_birthday", "user_friends"));
         callbackManager = CallbackManager.Factory.create();
 
-        if(AccessToken.getCurrentAccessToken() != null){
+        if (AccessToken.getCurrentAccessToken() != null) {
             //RequestData();
         }
 
 
         loginButtonFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
-            public void getemail(String idtest)
-            {
+            public void getemail(String idtest) {
 
             }
 
@@ -207,7 +222,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 // Application code
                                 emailFB = object.optString("email");
                                 nameFB = object.optString("name"); // 01/31/1980 format
-                                idFB= object.optString("id");
+                                idFB = object.optString("id");
                                 //makePostRequestOnNewThread();
                             }
                         });
@@ -255,63 +270,69 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         /*tv = (TextView) findViewById(R.id.tv1);
         tv.setText(email);*/
         makePostRequestOnNewThread();
+        //tv = (TextView)findViewById(R.id.tv1);
+        //tv.setText(text);
 
     }
 
-    public static String POST(String url){
-        InputStream inputStream = null;
-        String result = "";
-        url="http://gruppettoapi.herokuapp.com/login";
+    public void postData() throws JSONException{
+        // Create a new HttpClient and Post Header
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("http://gruppettoapi.herokuapp.com/signup");
+        JSONObject jsonObject = new JSONObject();
+        String json = "";
         try {
+            // JSON data:
+            jsonObject.put("name", "paul");
+            jsonObject.put("email", "po@eoazkemlzaezae.com");
+            jsonObject.put("password","yoloooo");
+            json=jsonObject.toString();
+            //JSONArray postjson=new JSONArray();
+            //postjson.put(json);
 
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // 2. make POST request to the given URL
-            HttpPost httpPost = new HttpPost(url);
-
-            String json = "";
-
-            // 3. build jsonObject
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.accumulate("name", "paul");
-            jsonObject.accumulate("email", "yolo@yolo.fr");
-
-            // 4. convert JSONObject to JSON to String
-            json = jsonObject.toString();
-
-            // ** Alternative way to convert Person object to JSON string usin Jackson Lib
-            // ObjectMapper mapper = new ObjectMapper();
-            // json = mapper.writeValueAsString(person);
-
-            // 5. set json to StringEntity
             StringEntity se = new StringEntity(json);
+            // Post the data:
+            httppost.setEntity(se);
+            httppost.setHeader("Accept","application/json");
+            httppost.setHeader("Content-type", "application/json");
 
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
+            //httppost.getParams().setParameter("jsonpost",postjson);
 
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
+            // Execute HTTP Post Request
+            //System.out.print(json);
+            HttpResponse response = httpclient.execute(httppost);
 
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
+            // for JSON:
 
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
+            if(response != null) {
+                InputStream is = response.getEntity().getContent();
 
-            // 10. convert inputstream to string
-           /* if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";*/
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sb = new StringBuilder();
 
-        } catch (Exception e) {
-           //Log.d("InputStream", e.getLocalizedMessage());
+                String line = null;
+                try {
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line + "\n");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                text = sb.toString();
+            }
+
+
+        }catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
         }
-
-        // 11. return result
-        return "yolo";
     }
    /*public void RequestData(){
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
@@ -362,7 +383,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void run() {
                 //makePostRequest();
-                makePostRequest();
+                try {
+                    postData();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
         t.start();
