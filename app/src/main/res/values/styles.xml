@@ -1,0 +1,33 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#339933</item>
+        <item name="colorPrimaryDark">#FFFFFF</item>
+        <item name="colorAccent">#FFD700</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="text_view_style">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">serif</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">#339933</item>
+        <item name="colorPrimaryDark">#FFFFFF</item>
+        <item name="colorAccent">#FFFF00</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.pschotte.grupetto1.AccueilActivity"
+    tools:showIn="@layout/activity_accueil">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/button_my_groups"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voir mes groupes"
+            android:inputType="textEmailAddress"
+            android:layout_gravity="center_horizontal"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:clickable="true" />
+
+
+        <Button
+            android:id="@+id/button_search_training"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rechercher un entrainement"
+            android:inputType="textEmailAddress"
+            android:layout_gravity="center_horizontal"/>
+
+        <Button
+            android:id="@+id/button_propose_training"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Proposer un entrainement"
+            android:inputType="textEmailAddress"/>
+
+        <Button
+            android:id="@+id/button_my_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mon calendrier"
+            android:inputType="textEmailAddress"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

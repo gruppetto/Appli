@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.pschotte.grupetto1.GroupActivity">
+
+    <View
+        android:id="@+id/centerVerticalShim"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/centerHorizontalShim"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/button_chat_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/centerVerticalShim"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/centerHorizontalShim"
+        android:background="#FFFFFF"
+        android:gravity="center"
+        android:text="Fils de discussion"
+        android:textColor="#000000" >
+    </Button>
+
+    <Button
+        android:id="@+id/button_group_members"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/centerVerticalShim"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/centerHorizontalShim"
+        android:background="#66FF00"
+        android:gravity="center"
+        android:text="Membres du groupe"
+        android:textColor="#000000" >
+    </Button>
+
+    <Button
+        android:id="@+id/button_calendar_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/centerVerticalShim"
+        android:layout_toLeftOf="@+id/centerHorizontalShim"
+        android:background="#66FF00"
+        android:gravity="center"
+        android:text="Calendrier du groupe"
+        android:textColor="#000000" >
+    </Button>
+
+    <Button
+        android:id="@+id/button_quit_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/centerVerticalShim"
+        android:layout_toRightOf="@+id/centerHorizontalShim"
+        android:background="#FFFFFF"
+        android:gravity="center"
+        android:text="Quitter le groupe"
+        android:textColor="#000000" >
+    </Button>
+</RelativeLayout>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.pschotte.grupetto1.SportActivity"
+    tools:showIn="@layout/activity_sport">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button_sport1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Course" />
+
+        <Button
+            android:id="@+id/button_sport2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport2" />
+
+        <Button
+            android:id="@+id/button_sport3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport3" />
+
+        <Button
+            android:id="@+id/button_sport4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport4" />
+
+        <Button
+            android:id="@+id/button_sport5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport5" />
+
+        <Button
+            android:id="@+id/button_sport6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport6" />
+
+        <Button
+            android:id="@+id/button_sport7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport7" />
+
+        <Button
+            android:id="@+id/button_sport8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport8" />
+
+        <Button
+            android:id="@+id/button_sport9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport9" />
+
+        <Button
+            android:id="@+id/button_sport10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sport10" />
+
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>
