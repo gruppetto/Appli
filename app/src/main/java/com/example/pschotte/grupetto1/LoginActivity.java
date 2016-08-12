@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private String nameFB;
     private String dateFB;
     private String text;
-
+    private boolean retourLogin;
     private LoginButton loginButtonFacebook;
     private CallbackManager callbackManager;
 
@@ -157,13 +157,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         FacebookSdk.sdkInitialize(getApplicationContext());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //makePostRequestOnNewThread();
+
         // Set up the login form.
         // classic login
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        //populateAutoComplete();
-
-
+        //populateAutoComplete()
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -182,6 +180,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+
+        Button mEmailRegisterButton = (Button) findViewById(R.id.email_register_button);
+        mEmailRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                attemptRegister();
             }
         });
 
@@ -205,10 +211,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         loginButtonFacebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
-            public void getemail(String idtest) {
-
-            }
-
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
@@ -231,8 +233,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 request.setParameters(parameters);
                 request.executeAsync();
                 //makePostRequestOnNewThread();
-
-
             }
 
 
@@ -240,8 +240,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onCancel() {
                 tv = (TextView) findViewById(R.id.tv1);
                 tv.setText("nop");
-                makePostRequestOnNewThread();
-
+                //makePostRequestOnNewThread();
             }
 
             @Override
@@ -252,30 +251,50 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         });
 
-
-
-
-        /*String yolo="http://gruppettoapi.herokuapp.com/";
-        Uri uri2 = Uri.parse(yolo);
-        getHttpResponse(uri2);
-        String yoleo="yolo";
-        android.net.Uri auri = new android.net.Uri(yoleo);
-        java.net.URI juri = new java.net.URI(auri.toString());
-        String urlStr = "http://abc.dev.domain.com/0007AC/ads/800x480 15sec h.264.mp4";
-        URL url = new URL(urlStr);
-        URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef());*/
-        //this.makePostRequest();
-
-
-        /*tv = (TextView) findViewById(R.id.tv1);
-        tv.setText(email);*/
-        makePostRequestOnNewThread();
-        //tv = (TextView)findViewById(R.id.tv1);
-        //tv.setText(text);
-
+        //makePostRequestOnNewThread();
     }
 
-    public void postData() throws JSONException{
+    private void makePostRequestRegisterOnNewThread(final String email, final String password) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //makePostRequest();
+                try {
+                    postDataRegister(email, password);
+                    showToast("Compte créé !");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+    private void makePostRequestLoginOnNewThread(final String email, final String password) {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //makePostRequest();
+                try {
+                    postDataLogin(email, password);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+    }
+
+    public void showToast(final String toast)
+    {
+        runOnUiThread(new Runnable() {
+            public void run()
+            {
+                Toast.makeText(LoginActivity.this, toast, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void postDataRegister(String email, String password) throws JSONException{
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost("http://gruppettoapi.herokuapp.com/signup");
@@ -283,14 +302,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         String json = "";
         try {
             // JSON data:
-            jsonObject.put("name", "paul");
-            jsonObject.put("email", "po@eoazkemlzaezae.com");
-            jsonObject.put("password","yoloooo");
+            jsonObject.put("name", "osef");
+            jsonObject.put("email", email);
+            jsonObject.put("password",password);
             json=jsonObject.toString();
-            //JSONArray postjson=new JSONArray();
-            //postjson.put(json);
-
             StringEntity se = new StringEntity(json);
+
             // Post the data:
             httppost.setEntity(se);
             httppost.setHeader("Accept","application/json");
@@ -298,15 +315,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             //httppost.getParams().setParameter("jsonpost",postjson);
 
-            // Execute HTTP Post Request
-            //System.out.print(json);
             HttpResponse response = httpclient.execute(httppost);
 
             // for JSON:
 
             if(response != null) {
                 InputStream is = response.getEntity().getContent();
-
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                 StringBuilder sb = new StringBuilder();
 
@@ -334,108 +348,75 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO Auto-generated catch block
         }
     }
-   /*public void RequestData(){
-        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-            @Override
-            public void onCompleted(JSONObject object,GraphResponse response) {
 
-                JSONObject json = response.getJSONObject();
+    public void postDataLogin(String email, String password) throws JSONException{
+        // Create a new HttpClient and Post Header
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("http://gruppettoapi.herokuapp.com/authenticate");
+        JSONObject jsonObject = new JSONObject();
+        String json = "";
+        try {
+            // JSON data:
+            jsonObject.put("email", email);
+            jsonObject.put("password",password);
+            json=jsonObject.toString();
+            StringEntity se = new StringEntity(json);
+
+            // Post the data:
+            httppost.setEntity(se);
+            httppost.setHeader("Accept","application/json");
+            httppost.setHeader("Content-type", "application/json");
+
+            //httppost.getParams().setParameter("jsonpost",postjson);
+
+            HttpResponse response = httpclient.execute(httppost);
+
+            // for JSON:
+
+            if(response != null) {
+                InputStream is = response.getEntity().getContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sb = new StringBuilder();
+
+                String line = null;
                 try {
-                    if(json != null){
-                        String text = "<b>Name :</b> "+json.getString("name")+"<br><br><b>Email :</b> "+json.getString("email")+"<br><br><b>Profile link :</b> "+json.getString("link");
-
-                        tv = (TextView) findViewById(R.id.tv1);
-                        tv.setText(Html.fromHtml(text));
-                        //profile.setProfileId(json.getString("id"));
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line + "\n");
                     }
-
-                } catch (JSONException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    try {
+                        is.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,link,email,picture");
-        request.setParameters(parameters);
-        request.executeAsync();
-    }*/
-
-
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }*/
-/* private void postrequest(){
-        Client client = ClientBuilder.newClient();
-        Entity payload = Entity.json("{  'email': 'email@email.com',  'name': 'popol',  'pictureUrl': 'http://mypicture.com/big.png',  'fbId': '10209915770150065'}");
-        Response response = client.target("http://gruppettoapi.herokuapp.com/login ")
-                        .request(MediaType.APPLICATION_JSON_TYPE)
-                        .post(payload);
-
-        System.out.println("status: " + response.getStatus());
-        System.out.println("headers: " + response.getHeaders());
-        System.out.println("body:" + response.readEntity(String.class));
-    }*/
-
-
-    private void makePostRequestOnNewThread() {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //makePostRequest();
-                try {
-                    postData();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (response.getStatusLine().getStatusCode()==200){
+                    lancementVueSuivante();
                 }
+                else {
+                    retourLogin=false;
+                }
+                text = sb.toString();
             }
-        });
-        t.start();
-    }
 
 
-    private void makePostRequest() {
-
-        HttpClient httpClient = new DefaultHttpClient();
-
-        //Post Data
-        HttpPost httpPost = new HttpPost("http://gruppettoapi.herokuapp.com/login");
-        List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(1);
-        //nameValuePair.add(new BasicNameValuePair(" name: ", nameFB));
-        nameValuePair.add(new BasicNameValuePair("email", "bjbklbj@gmail.com"));
-        //nameValuePair.add(new BasicNameValuePair("fbId: ", idFB));
-        tv = (TextView) findViewById(R.id.tv1);
-
-        //Encoding POST data
-        try {
-            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
-            tv.setText("noError");
-        } catch (UnsupportedEncodingException e) {
-            tv.setText("error1");
-            e.printStackTrace();
-        }
-
-        // Making HTTP Request
-        try {
-            HttpResponse response = httpClient.execute(httpPost);
-
-            // writing response to log
-            Log.d("Http Response:", response.toString());
-            //tv.setText(response.toString());
-        } catch (ClientProtocolException e) {
-            // writing exception to log
-            tv.setText("error2");
-            e.printStackTrace();
+        }catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
         } catch (IOException e) {
-            // writing exception to log
-            e.printStackTrace();
-            tv.setText("error3");
-
+            // TODO Auto-generated catch block
         }
-
-
-
     }
+
+
+private void lancementVueSuivante(){
+    Intent intent = new Intent(LoginActivity.this, AccueilActivity.class);
+    startActivity(intent);
+}
+
+
+
 
     private class GetData extends AsyncTask<String, Void, String> {
         private TextView display;
@@ -572,11 +553,63 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            //showProgress(true);
+            makePostRequestLoginOnNewThread(email, password);
+           // mAuthTask = new UserLoginTask(email, password);
             //mAuthTask.execute((Void) null);
-            Intent intent = new Intent(LoginActivity.this, AccueilActivity.class);
-            startActivity(intent);
+            if ((retourLogin==true)){
+                Intent intent = new Intent(LoginActivity.this, AccueilActivity.class);
+                startActivity(intent);
+            }
+
+        }
+    }
+
+    private void attemptRegister() {
+        if (mAuthTask != null) {
+            return;
+        }
+
+        // Reset errors.
+        mEmailView.setError(null);
+        mPasswordView.setError(null);
+
+        // Store values at the time of the login attempt.
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            //showProgress(true);
+            makePostRequestRegisterOnNewThread(email, password);
+            //mAuthTask.execute((Void) null);
+
         }
     }
 
@@ -714,6 +747,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             // TODO: register the new account here.
+            //makePostRequestOnNewThread(mEmail, mPassword);
             return true;
         }
 
