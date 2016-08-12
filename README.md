@@ -9,3 +9,6 @@ Pour chaque classe, le xml correspondant à une corrélation avec le nom de la c
 Certaines classes ont deux .xml, un content et un activity.
 L'activity est le panel, la présentation.
 Le content est le contenu de la page.
+
+Les fichiers java sont en : Appli/app/src/main/java/com/example/pschotte/grupetto1/
+LEs fichiers xml sont en : Appli/app/src/main/res/layout/
