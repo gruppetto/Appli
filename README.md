@@ -12,3 +12,5 @@ Le content est le contenu de la page.
 
 Les fichiers java sont en : Appli/app/src/main/java/com/example/pschotte/grupetto1/
 LEs fichiers xml sont en : Appli/app/src/main/res/layout/
+
+Le login fonctionne, la création de groupe aussi, je travaille sur les fonctionnalités des groupes.
